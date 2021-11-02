@@ -1,0 +1,263 @@
+{
+  "name": "Owen UserBot",
+  "description": "Owen UserBot",
+  "logo": "https://i.hizliresim.com/9tep7oz.jpg",
+  "keywords": [
+    "telegram",
+    "userbot",
+	"Owen",
+    "plugin",
+    "modular",
+    "productivity"
+  ],
+  "repository": "https://github.com/erdewbey/OwenUserBot",
+  "website":   "https://t.me/OwenProjects",
+  "success_url": "https://t.me/Owenuserbot",
+  "stack": "container",
+  "env": {
+    "API_KEY": {
+      "description": "Bu değeri my.telegram.org adresinden alın.",
+      "required": true
+    },
+    "API_HASH": {
+      "description": "Bu değeri my.telegram.org adresinden alın.",
+      "required": true
+    },
+    "PLUGIN_CHANNEL_ID": {
+      "description": "İsteğe bağlıdır",
+      "required": false
+    },
+"SUDO_ID": {
+  "description": "İd sini yazdığınız arkadaşınızın bazı komutları kullanabilmesi için",
+  "value": "",
+  "required": false
+    },
+"CV_MSG": {
+  "description": "CV nizde gözükecek olan yazı.",
+  "value": "Sahibim Fazla Bi Bilgi Ayarlamamış Ama Şunu Biliyorum Kendisi Baya Zevkli Birisi Çünkü Owen Userbot Kullanıyor 😁",
+  "required": false
+    },
+    "SPOTIFY_DC": {
+      "description": "Spotify bio için gerekli olan anahtar",
+      "required": false
+    },
+    "BLACKLIST_CHAT": {
+      "description": "Userbotun kapatılacağı gruplar, boşlukla ayırın! -0000 -1111 tarzı bilmiyorsanız veya userbot heryerde çalışsın istiyorsanız ELLEMEYİN!",
+      "value": "False",
+      "required": false
+    },
+    "SPOTIFY_KEY": {
+      "description": "Spotify bio için gerekli olan anahtar",
+      "required": false
+    },
+    "STRING_SESSION": {
+      "description": "python3 GenerateStringSession.py dosyasını yerel olarak çalıştırarak bu değeri alın.",
+      "required": true
+    },
+    "HEROKU_MEMEZ": {
+      "description": "UserBot bir Heroku Dyno üzerinde çalışıyorsa, bu değer True olmalıdır.",
+      "value": "True",
+      "required": true
+    },
+    "HEROKU_APIKEY": {
+      "description": "Heroku API Key, 'https://dashboard.heroku.com/account' adresinden alın.",
+      "value": ""
+    },
+    "HEROKU_APPNAME": {
+      "description": "Heroku uygulama adını buraya ekleyin. UserBot güncellemelerine yardımcı olur.",
+      "required": true
+    },
+    "UPSTREAM_REPO_URL": {
+      "description": "Fork sağlamanız durumunda repo URL'nizi buraya ekleyin. Varsayılan olarak kendi repo adresimiz eklidir.",
+      "value": "https://github.com/erdewbey/OwenUserBot",
+      "required": true
+    },
+    "COUNTRY": {
+      "description": "Ülkenizi .time ve .date komutlarında kullanılacak şekilde ayarlayın. Varsayılan olarak Türkiye ayarlanmıştır.",
+      "value": "Turkey",
+      "required": false
+    },
+    "TZ_NUMBER": {
+      "description": "Ülkenizde birden fazla Saat Dilimi olması durumunda bu değeri değiştirin.",
+      "value": "1",
+      "required": false
+    },
+    "TZ": {
+      "description": "Bunun ne işe yaradığı hakkında fikrin yoksa kurcalama :)",
+      "value": "Europe/Istanbul",
+      "required": true  
+    },
+    "CHROME_DRIVER": {
+      "description": "Selenium tabanlı modüller için ChromeDriver konumu.",
+      "value": "/usr/bin/chromedriver",
+      "required": false
+    },
+    "GOOGLE_CHROME_BIN": {
+      "description": "Selenium tabanlı modüller için Google Chrome (veya) Chromium binary konumu.",
+      "value": "/usr/bin/chromium-browser",
+      "required": false
+    },
+    "OPEN_WEATHER_MAP_APPID": {
+      "description": "https://api.openweathermap.org/data/2.5/weather adresinden kendi APPID'inizi (API key) edinin.",
+      "required": false
+    },
+    "BOTLOG": {
+      "description": "Botla yaptığınız işlemi kaydetmek için bir grup ve bazı pluginleri çalışması için gerekli",
+      "value": "False"
+    },
+    "BOT_USERNAME": {
+      "description": "Inline bot özelliğinin çalışması için gereklidir. Buraya botunuzun kullanıcı adınız yazmanız lazım (Örnek: @OwenBot). Botunuz yok ise @BotFather yardımı ile bot oluşturabilirsiniz.",
+      "required": false  
+    },
+    "BOT_TOKEN": {
+      "description": "Inline bot özelliğinin çalışması için gereklidir. Buraya botunuzun tokenini yazmanız lazım. Botunuz yok ise @BotFather yardımı ile bot oluşturabilirsiniz.",
+      "required": false    
+    },
+    "GENIUS": {
+      "description": "Buraya aldığınız Genius API Token'i yazın.",
+      "required": false
+    },
+    "AUTO_PP": {
+      "description": "Autopp modülünün çalışması için gerekli olan değişkendir. Çalışması için kullanacağınız resmin direk adresini girmeniz gerekiyor.",
+      "required": false      
+    },
+    "BOTLOG_CHATID": {
+      "description": "Günlük grubunun ChatID'si. BOTLOG= False ve / veya LOGSPAMMER= False ise '0' olarak ayarlayın.",
+      "value": "0"
+    },
+    "CONSOLE_LOGGER_VERBOSE": {
+      "description": "Konsol günlüğünde ayrıntıya ihtiyacınız varsa, bunu True olarak ayarlayın.",
+      "value": "False"
+    },
+    "PM_AUTO_BAN": {
+      "description": "PM Otomatik Yasaklama Özelliği. 'Hey! Bu bir bot.' modülüdür.",
+      "value": "False"
+    },
+    "PM_AUTO_BAN_LIMIT": {
+      "description": "PM Auto Ban limiti. Size kullanıcı x mesaj atarsa engellencek.",
+      "value": "4",
+      "required": false
+    },
+    "YOUTUBE_API_KEY": {
+      "description": ".yt komutu için YouTube Veri API'sı keyidir. https://console.cloud.google.com adresinden alın.",
+      "required": false
+    },
+    "OCR_OWEN_API_KEY": {
+      "description": ".ocr komutu için OCR API Key. https://ocr.owen/ocrapi adresinden alın.",
+      "required": false
+    },
+    "REM_BG_API_KEY": {
+      "description": ".rbg komutu için API Key. https://www.remove.bg/api adresinden alın.",
+      "required": false
+    },
+    "ANTI_SPAMBOT": {
+      "description": "Katıldıktan sonra gruplardan spambotları tekmeliyor. [Tekmelemek için yönetici yetkileri gerektirir]",
+      "value": "False"
+    },
+    "ANTI_SPAMBOT_SHOUT": {
+      "description": "Tekme atmak için yönetici yetkileriniz yoksa spambotları gruba katıldıktan sonra yöneticilere rapor edin.",
+      "value": "False"
+    },
+    "TMP_DOWNLOAD_DIRECTORY": {
+      "description": "Birçok modül için indirme konumu (GDrive, .download vb..)",
+      "value": "./downloads/"
+    },
+    "CLEAN_WELCOME": {
+      "description": "Yeni bir kişi katıldığında, eski karşılama mesajı silinir.",
+      "value": "True"
+    },
+    "G_DRIVE_CLIENT_ID": {
+      "description": "Google Drive için client id girin.",
+      "required": false
+    },
+    "LASTFM_API": {
+      "description": "Last.FM modülü için API Key. [Şuradan bir tane alın - https://www.last.fm/api/account/create]",
+      "required": false
+    },
+    "LASTFM_SECRET": {
+      "description": "Last.FM modülü için SECRET Key. [Şuradan bir tane alın - https://www.last.fm/api/account/create]",
+      "required": false
+    },
+    "LASTFM_USERNAME": {
+      "description": "Last.FM Kullanıcı adı",
+      "required": false
+    },
+    "LASTFM_PASSWORD": {
+      "description": "Last.FM Şifre",
+      "required": false
+    },
+    "BIO_PREFIX": {
+      "description": "Last.FM Modülü Biyografi için önek.",
+      "required": false
+    }, 
+    "DEFAULT_NAME": {
+      "description": "Klon plugininden sonra hesabınızın eski haline dönmesi için Telegram isminiz",
+      "required": false
+    }, 
+    "DEFAULT_BIO": {
+      "description": "Varsayılan profil biyografisi.",
+      "value": "@OwenUserBot",
+      "required": false
+    },
+    "G_DRIVE_CLIENT_SECRET": {
+      "description": "Google Drive için client secret girin.",
+      "required": false
+    },
+    "G_DRIVE_AUTH_TOKEN_DATA": {
+      "description": "Google Drive kimlik doğrulama verilerini JSON yapısı olarak girin.",
+      "required": false
+    },
+    "LYDIA_API_KEY": {
+      "description": "Bu modülün çalışması için CoffeeHouse API'sine ihtiyacı var. 'https://coffeehouse.intellivoid.info/dashboard' Buradan alabilirsiniz.",
+      "required": false
+    },
+    "WEATHER_DEFCITY": {
+      "description": "UserBot'un hava durumu modülü için varsayılan şehri ayarlayın.",
+      "required": false
+    },
+    "LOGSPAMMER": {
+      "description": "Hata günlüklerinin, geçerli sohbette dosyayı göndermesi yerine UserBot günlük grubunda saklanmasını istemeniz durumunda bu değeri True olarak ayarlayın. Geçerli bir BOTLOG_CHATID değerinin ayarlanmasını gerektirir.",
+      "value": "False"
+    },
+    "WARN_LIMIT": {
+      "description": "Kişiyi gmutelemek/gbanlamak için gerekli uyarı sayısı. Genellikle 3 kullanılır.",
+      "value": "3",
+      "required": false
+    },
+    "WARN_MODE": {
+      "description": "3 uyarıdan sonra gerçekleşecek olay. Sadece gmute ya da gban yazabilirsiniz. Aksi takdirde bot çalışmayabilir.",
+      "value": "gmute",
+      "required": false
+    },
+    "GALERI_SURE": {
+      "description": "Galeri plugini içindir. Profil fotoğrafları kaç saniye de bir değişsin?",
+      "value": "60",
+      "required": false
+    },
+    "PAKET_ISMI": {
+      "description": "Dızla komutu paket ismini belirleyin. Paket ismi şöyle olacaktır: @KullanıcıAdın verdiğin değer 1",
+      "value": "@OwenUserBot Paketi",
+      "required": false
+    },
+    "OTOMATIK_KATILMA": {
+      "description": "Support grubuna ve Kanal'a otomatik katılmak istemiyorsanız False yazın.",
+      "value": "True",
+      "required": true
+    },
+    "LANGUAGE": {
+      "description": "Botun dili. EN/TR/AZ yazabilirsiniz.",
+      "value": "TR",
+      "required": true
+    }
+  },
+  "addons": [{
+    "plan": "heroku-postgresql"
+  }],
+  "buildpacks": [{
+    "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest"
+  }, {
+    "url": "heroku/python"
+  },{
+    "url": "heroku-community/apt"
+    }]
+}
