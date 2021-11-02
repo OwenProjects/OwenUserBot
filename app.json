@@ -10,7 +10,7 @@
     "modular",
     "productivity"
   ],
-  "repository": "https://github.com/erdewbey/OwenUserBot",
+  "repository": "https://github.com/OwenProjects/OwenUserBot",
   "website":   "https://t.me/OwenProjects",
   "success_url": "https://t.me/Owenuserbot",
   "stack": "container",
