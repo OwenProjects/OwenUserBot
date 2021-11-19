@@ -15,7 +15,7 @@ import requests
 from telethon.tl.types import InputMessagesFilterDocument
 from telethon.errors.rpcerrorlist import PhoneNumberInvalidError
 from telethon.tl.functions.channels import GetMessagesRequest
-from . import BRAIN_CHECKER, LOGS, bot, PLUGIN_CHANNEL_ID, CMD_HELP, LANGUAGE, OWEN_VERSION, PATTERNS, DEFAULT_NAME, BOT_TOKEN
+from . import BRAIN_CHECKER, LOGS, bot, PLUGIN_CHANNEL_ID, CMD_HELP, LANGUAGE, OWEN_VERSION, PATTERNS, DEFAULT_NAME, BOT_TOKEN, HEROKU_APIKEY, HEROKU_APPNAME
 from .modules import ALL_MODULES
 from .asisstant.modules import ALL_MODULE
 import userbot.modules.sql_helper.mesaj_sql as MSJ_SQL
@@ -113,6 +113,99 @@ for i in ALL_ROWS:
     BRAIN_CHECKER.append(i[0])
 connect("learning-data-root.check").close()
 BRAIN_CHECKER = BRAIN_CHECKER[0]
+import asyncio
+import os
+from random import randint
+from telethon.tl.functions.contacts import UnblockRequest
+from . import LOGS
+import heroku3
+heroku_api = "https://api.heroku.com"
+if HEROKU_APPNAME is not None and HEROKU_APIKEY is not None:
+    Heroku = heroku3.from_key(HEROKU_APIKEY)
+    app = Heroku.app(HEROKU_APPNAME)
+    heroku_var = app.config()
+else:
+    app = None
+
+async def autobot():
+    if BOT_TOKEN:
+        return
+    await bot.start()
+    LOGS.info("Asistan botunuz yok Oluşturuluyor...")
+    who = bot.me
+    name = who.first_name + "'s Assistant Bot"
+    if who.username:
+        username = who.username + "_bot"
+    else:
+        username = "owen_" + (str(who.id))[5:] + "_bot"
+    bf = "@BotFather"
+    await bot(UnblockRequest(bf))
+    await bot.send_message(bf, "/cancel")
+    await asyncio.sleep(1)
+    await bot.send_message(bf, "/start")
+    await asyncio.sleep(1)
+    await bot.send_message(bf, "/newbot")
+    await asyncio.sleep(1)
+    isdone = (await bot.get_messages(bf, limit=1))[0].text
+    if isdone.startswith("That I cannot do."):
+        LOGS.info(
+            "Bot fatherdan manuel bot oluşturup BOT_TOKEN değerini ayarlayın."
+        )
+        exit(1)
+    await bot.send_message(bf, name)
+    await asyncio.sleep(1)
+    isdone = (await bot.get_messages(bf, limit=1))[0].text
+    if not isdone.startswith("Good."):
+        await bot.send_message(bf, "My Owen Bot")
+        await asyncio.sleep(1)
+        isdone = (await bot.get_messages(bf, limit=1))[0].text
+        if not isdone.startswith("Good."):
+            LOGS.info(
+                "Please make a Bot from @BotFather and add it's token in BOT_TOKEN, as an env var and restart me."
+            )
+            exit(1)
+    await bot.send_message(bf, username)
+    await asyncio.sleep(1)
+    isdone = (await bot.get_messages(bf, limit=1))[0].text
+    await bot.send_read_acknowledge("botfather")
+    if isdone.startswith("Sorry,"):
+        ran = randint(1, 100)
+        username = "owen_" + (str(who.id))[6:] + str(ran) + "_bot"
+        await bot.send_message(bf, username)
+        await asyncio.sleep(1)
+        nowdone = (await bot.get_messages(bf, limit=1))[0].text
+        if nowdone.startswith("Done!"):
+            token = nowdone.split("`")[1]
+            app.config['BOT_TOKEN'] = token
+            await bot.send_message(bf, "/setinline")
+            await asyncio.sleep(1)
+            await bot.send_message(bf, f"@{username}")
+            await asyncio.sleep(1)
+            await bot.send_message(bf, "Search")
+            LOGS.info(f"DONE YOUR TELEGRAM BOT IS CREATED SUCCESSFULLY @{username}")
+        else:
+            LOGS.info(
+                "Please Delete Some Of your Telegram bots at @Botfather or Set Var BOT_TOKEN with token of a bot"
+            )
+
+            exit(1)
+    elif isdone.startswith("Done!"):
+        token = isdone.split("`")[1]
+        app.config['BOT_TOKEN'] = token
+        await bot.send_message(bf, "/setinline")
+        await asyncio.sleep(1)
+        await bot.send_message(bf, f"@{username}")
+        await asyncio.sleep(1)
+        await bot.send_message(bf, "Search")
+        LOGS.info(f"DONE YOUR TELEGRAM BOT IS CREATED SUCCESSFULLY @{username}")
+    else:
+        LOGS.info(
+            "Please Delete Some Of your Telegram bots at @Botfather or Set Var BOT_TOKEN with token of a bot"
+        )
+
+        exit(1)
+
+
 
 def extractCommands(file):
     FileRead = open(file, 'r').read()
