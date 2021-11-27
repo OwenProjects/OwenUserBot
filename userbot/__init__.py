@@ -27,8 +27,9 @@ from telethon.tl.functions.channels import JoinChannelRequest, LeaveChannelReque
 from telethon.sync import TelegramClient, custom
 from telethon.sessions import StringSession
 from telethon.events import callbackquery, InlineQuery, NewMessage
+from telethon.tl.functions.users import GetFullUserRequest
 from math import ceil
-
+from telethon.tl.functions.channels import EditPhotoRequest, CreateChannelRequest
 
 load_dotenv("config.env")
 
@@ -222,7 +223,7 @@ CLEAN_WELCOME = sb(os.environ.get("CLEAN_WELCOME", "True"))
 
 # Last.fm Modülü
 BIO_PREFIX = os.environ.get("BIO_PREFIX", "@OwenUserBot | ")
-DEFAULT_BIO = os.environ.get("DEFAULT_BIO", None)
+#DEFAULT_BIO = os.environ.get("DEFAULT_BIO", None)
 
 LASTFM_API = os.environ.get("LASTFM_API", None)
 LASTFM_SECRET = os.environ.get("LASTFM_SECRET", None)
@@ -246,7 +247,7 @@ TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY",
                                          "./downloads")
 
 #Revert yani Klondan Sonra hesabın eski haline dönmesi
-DEFAULT_NAME = os.environ.get("DEFAULT_NAME", None)
+#DEFAULT_NAME = os.environ.get("DEFAULT_NAME", None)
 
 # Bazı pluginler için doğrulama
 USERBOT_ = True
@@ -376,7 +377,6 @@ with open('learning-data-root.check', 'wb') as load:
     # mm = await event.client(getchat(event.chat_id))
    # xx = await event.client(getvc(mm.full_chat.call))
    # return xx.call
-
 async def check_botlog_chatid():
     if not BOTLOG_CHATID and LOGSPAMMER:
         LOGS.info(
@@ -398,6 +398,23 @@ async def check_botlog_chatid():
             "Grup ID'sini doğru yazıp yazmadığınızı kontrol edin.")
         quit(1)
         
+        
+from random import randint
+import heroku3
+import asyncio
+from telethon.tl.functions.contacts import UnblockRequest
+heroku_api = "https://api.heroku.com"
+if HEROKU_APPNAME is not None and HEROKU_APIKEY is not None:
+    Heroku = heroku3.from_key(HEROKU_APIKEY)
+    app = Heroku.app(HEROKU_APPNAME)
+    heroku_var = app.config()
+else:
+    app = None
+
+
+
+        
+          
 if not BOT_TOKEN == None:
     tgbot = TelegramClient(
         "TG_BOT_TOKEN",
@@ -427,7 +444,7 @@ def butonlastir(sayfa, moduller):
     return [max_pages, butonlar]
 
 with bot:
-
+    
 
     try:
         bot(LeaveChannelRequest("@SiriSupport"))
@@ -445,10 +462,17 @@ with bot:
         pass
 
     moduller = CMD_HELP
-
+    
     me = bot.get_me()
     uid = me.id
+    usnm = me.username
+    name = me.first_name
+    lname = me.last_name
+    getu = bot(GetFullUserRequest(uid))
+    ubio = getu.about
+    DEFAULT_BIO = ubio
     OWNER_ID = me.id
+    DEFAULT_NAME = name + lname
     try:
         @tgbot.on(NewMessage(pattern='/start'))
         async def start_bot_handler(event):
@@ -568,21 +592,121 @@ Hesabınızı bot'a çevirebilirsiniz ve bunları kullanabilirsiniz. Unutmayın,
                 link_preview=False
             )
     except Exception as e:
-        print(e)
-        LOGS.info(
-            "Botunuzda inline desteği devre dışı bırakıldı. "
-            "Etkinleştirmek için bir bot token tanımlayın ve botunuzda inline modunu etkinleştirin. "
-            "Eğer bunun dışında bir sorun olduğunu düşünüyorsanız bize ulaşın t.me/OwenSupport."
-        )
+        pass
 
-    try:
+try:
         bot.loop.run_until_complete(check_botlog_chatid())
-    except:
+except:
         LOGS.info(
             "BOTLOG_CHATID ortam değişkeni geçerli bir varlık değildir. "
             "Ortam değişkenlerinizi / config.env dosyanızı kontrol edin."
         )
         quit(1)
+#Auto bot
+async def autobot():
+    if BOT_TOKEN:
+        return
+    await bot.start()
+    LOGS.info("Asistan botunuz yok Oluşturuluyor...")
+    
+    DEFAULT_NAME + "'s Assistant Bot"
+    if usnm:
+        username = usnm + "_bot"
+    else:
+        username = "owen_" + (str(uid))[5:] + "_bot"
+    bf = "@BotFather"
+    await bot(UnblockRequest(bf))
+    await bot.send_message(bf, "/cancel")
+    time.sleep(3)
+    await bot.send_message(bf, "/start")
+    time.sleep(3)
+    await bot.send_message(bf, "/newbot")
+    time.sleep(3)
+    isdone = (await bot.get_messages(bf, limit=1))[0].text
+    if isdone.startswith("That I cannot do."):
+        LOGS.info(
+            "Bot fatherdan manuel bot oluşturup BOT_TOKEN değerini ayarlayın."
+        )
+        exit(1)
+    await bot.send_message(bf, name)
+    time.sleep(3)
+    isdone = (await bot.get_messages(bf, limit=1))[0].text
+    if not isdone.startswith("Good."):
+        await bot.send_message(bf, "My Owen Bot")
+        time.sleep(3)
+        isdone = (await bot.get_messages(bf, limit=1))[0].text
+        if not isdone.startswith("Good."):
+            LOGS.info(
+                "Bot fatherdan manuel bot oluşturup BOT_TOKEN değerini ayarlayın")
+            exit(1)
+    await bot.send_message(bf, username)
+    time.sleep(3)
+    isdone = (await bot.get_messages(bf, limit=1))[0].text
+    await bot.send_read_acknowledge("botfather")
+    if isdone.startswith("Sorry,"):
+        ran = randint(1, 100)
+        username = "owen_" + (str(uid))[6:] + str(ran) + "_bot"
+        await bot.send_message(bf, username)
+        time.sleep(3)
+        nowdone = (await bot.get_messages(bf, limit=1))[0].text
+        if nowdone.startswith("Done!"):
+            token = nowdone.split("`")[1]
+            await bot.send_message(bf, "/setinline")
+            time.sleep(3)
+            await bot.send_message(bf, f"@{username}")
+            time.sleep(3)
+            await bot.send_message(bf, "Search")
+            time.sleep(3)
+            await bot.send_message(bf, "/setabouttext")
+            time.sleep(3)
+            await bot.send_message(bf, f"@{username}")
+            time.sleep(3)
+            await bot.send_message(bf, "@OwenUserBot Asistan")
+            time.sleep(3)
+            await bot.send_message(bf, "/setuserpic")
+            time.sleep(3)
+            await bot.send_message(bf, f"@{username}")
+            time.sleep(3)
+            await bot.send_file(bf, "image/owen.jpg") 
+            heroku_var["BOT_TOKEN"] = token
+            heroku_var["BOT_USERNAME"] = username
+            LOGS.info(f"OwenUserBot ile otomatik olarak asistan oluşturuldu. @{username}")
+        else:
+            LOGS.info(
+                "LÜTFEN @Botfather dan bazı botları silin"
+            )
+
+            exit(1)
+    elif isdone.startswith("Done!"):
+        token = isdone.split("`")[1]
+        await bot.send_message(bf, "/setinline")
+        time.sleep(3)
+        await bot.send_message(bf, f"@{username}")
+        time.sleep(3)
+        await bot.send_message(bf, "Search")
+        time.sleep(3)
+        await bot.send_message(bf, "/setabouttext")
+        time.sleep(3)
+        await bot.send_message(bf, f"@{username}")
+        time.sleep(3)
+        await bot.send_message(bf, "@OwenUserBot ile otomatik olarak oluşturulmuş Asistan")
+        time.sleep(3)
+        await bot.send_message(bf, "/setuserpic")
+        time.sleep(3)
+        await bot.send_message(bf, f"@{username}")
+        time.sleep(3)
+        await bot.send_file(bf, "image/owen.jpg")
+        heroku_var["BOT_TOKEN"] = token
+        heroku_var["BOT_USERNAME"] = username
+        LOGS.info(f"OwenUserBot ile otomatik olarak asistan oluşturuldu. @{username}")
+    else:
+        LOGS.info(
+            "LÜTFEN @Botfather dan bazı botları silin"
+        )
+
+        exit(1)
+bot.loop.run_until_complete(autobot())
+
 
 
 # Küresel Değişkenler
