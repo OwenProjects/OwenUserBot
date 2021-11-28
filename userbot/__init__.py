@@ -472,7 +472,7 @@ with bot:
     ubio = getu.about
     DEFAULT_BIO = ubio
     OWNER_ID = me.id
-    DEFAULT_NAME = name + lname
+    DEFAULT_NAME = name
     try:
         @tgbot.on(NewMessage(pattern='/start'))
         async def start_bot_handler(event):
