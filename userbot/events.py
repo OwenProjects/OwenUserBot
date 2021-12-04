@@ -80,6 +80,8 @@ def register(**args):
                 raise events.StopPropagation
             except KeyboardInterrupt:
                 pass
+            except AttributeError:
+                pass
             except BaseException:
                 if not disable_errors:
                     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
