@@ -1,483 +1,158 @@
+# Copyright (C) 2019 The Raphielscape Company LLC.
+#
+# Licensed under the Raphielscape Public License, Version 1.c (the "License");
+# you may not use this file except in compliance with the License.
+#
+
+# OwenUserBot - ErdewBey 
+
+""" Olayları yönetmek için UserBot modülü.
+ UserBot'un ana bileşenlerinden biri. """
 import re
-import os
+from requests import get
 import sys
-from telethon.tl.types import DocumentAttributeFilename, InputMessagesFilterDocument
-import importlib
-import time
-import traceback
+from asyncio import create_subprocess_shell as asyncsubshell
+from asyncio import subprocess as asyncsub
+from os import remove
+from time import gmtime, strftime
+from traceback import format_exc
+from telethon import events
 
-from userbot import CMD_HELP, bot, tgbot, PLUGIN_CHANNEL_ID, PATTERNS, BOTLOG, BOTLOG_CHATID, ASISTAN, MYID, DEFAULT_NAME
-from telethon.tl.types import InputMessagesFilterDocument
-from userbot.events import register
-from userbot.main import extractCommands
-import userbot.cmdhelp
+from userbot import bot, BOTLOG_CHATID, LOGSPAMMER, PATTERNS, OWEN_VERSION, ForceVer
 
-# ██████ LANGUAGE CONSTANTS ██████ #
 
-from userbot.language import get_value
-LANG = get_value("__plugin")
-LANGG = get_value("misc")
+def register(**args):
+    """ Yeni bir etkinlik kaydedin. """
+    pattern = args.get('pattern', None)
+    disable_edited = args.get('disable_edited', False)
+    groups_only = args.get('groups_only', False)
+    trigger_on_fwd = args.get('trigger_on_fwd', False)
+    trigger_on_inline = args.get('trigger_on_inline', False)
+    disable_errors = args.get('disable_errors', False)
 
-# ████████████████████████████████ #
-SECURİTY = ["heroku", "STRING_SESSION", "HEROKU_APPNAME", "SESSION","SetPrivacyRequest","WHITELIST","LeaveChannelRequest","DeleteChannelRequest","DeleteAccountRequest","UPSTREAM_REPO_URL", "HEROKU_APIKEY", "API_HASH", "API_KEY", ".session.save", "EditBannedRequest", "ChatBannedRights", "kick_participiant", "ChatAdminRights", "EditAdminRequest"]
-# Plugin Porter - UniBorg
-@register(outgoing=True, pattern="^.pport")
-async def pport(event):
-    if event.is_reply:
-        reply_message = await event.get_reply_message()
-    else:
-        await event.edit(LANG["REPLY_FOR_PORT"])
-        return
+    if pattern:
+        args["pattern"] = pattern.replace("^.", "^["+ PATTERNS + "]")
+    if "disable_edited" in args:
+        del args['disable_edited']
 
-    await event.edit(LANG["DOWNLOADING"])
-    dosya = await event.client.download_media(reply_message)
-    dosy = open(dosya, "r").read()
+    if "ignore_unsafe" in args:
+        del args['ignore_unsafe']
 
-    borg1 = r"(@borg\.on\(admin_cmd\(pattern=\")(.*)(\")(\)\))"
-    borg2 = r"(@borg\.on\(admin_cmd\(pattern=r\")(.*)(\")(\)\))"
-    borg3 = r"(@borg\.on\(admin_cmd\(\")(.*)(\")(\)\))"
+    if "groups_only" in args:
+        del args['groups_only']
 
-    if re.search(borg1, dosy):
-        await event.edit(LANG["UNIBORG"])
-        komu = re.findall(borg1, dosy)
+    if "disable_errors" in args:
+        del args['disable_errors']
 
-        if len(komu) > 1:
-            await event.edit(LANG["TOO_MANY_PLUGIN"])
+    if "trigger_on_fwd" in args:
+        del args['trigger_on_fwd']
+      
+    if "trigger_on_inline" in args:
+        del args['trigger_on_inline']
 
-        komut = komu[0][1]
-        degistir = dosy.replace('@borg.on(admin_cmd(pattern="' + komut + '"))', '@register(outgoing=True, pattern="^.' + komut + '")')
-        degistir = degistir.replace("from userbot.utils import admin_cmd", "from userbot.events import register")
-        degistir = re.sub(r"(from uniborg).*", "from userbot.events import register", degistir)
-        degistir = degistir.replace("def _(event):", "def port_" + komut + "(event):")
-        degistir = degistir.replace("borg.", "event.client.")
-        ported = open(f'port_{dosya}', "w").write(degistir)
+    def decorator(func):
+        async def wrapper(check):
+         dosy = open("Dockerfile", "r").read()
+         if not re.search("OwenProjects",dosy):
+            await check.edit("Klon Bot tespit edildi!! Copy paster!!")
 
-        await event.edit(LANG["UPLOADING"])
+            OwenVer = int(OWEN_VERSION.split(".")[1])
+            if ForceVer > OwenVer:
+                await check.edit(f"`🌈 Botu acilen güncellemen lazım! Bu sürüm artık kullanılamıyor..`\n\n__🥺 Sorunu çözmek için__ `.update now` __yazmalısın!__")
+                return
 
-        await event.client.send_file(event.chat_id, f"port_{dosya}")
-        os.remove(f"port_{dosya}")
-        os.remove(f"{dosya}")
-    elif re.search(borg2, dosy):
-        await event.edit(LANG["UNIBORG2"])
-        komu = re.findall(borg2, dosy)
+            if not LOGSPAMMER:
+                send_to = check.chat_id
+            else:
+                send_to = BOTLOG_CHATID
 
-        if len(komu) > 1:
-            await event.edit(LANG["TOO_MANY_PLUGIN"])
-            return
+            if not trigger_on_fwd and check.fwd_from:
+                return
 
-        komut = komu[0][1]
+            if check.via_bot_id and not trigger_on_inline:
+                return
+             
+            if groups_only and not check.is_group:
+                await check.respond("`⛔ Bunun bir grup olduğunu sanmıyorum. Bu plugini bir grupta dene! `")
+                return
 
-        degistir = dosy.replace('@borg.on(admin_cmd(pattern=r"' + komut + '"))', '@register(outgoing=True, pattern="^.' + komut + '")')
-        degistir = degistir.replace("from userbot.utils import admin_cmd", "from userbot.events import register")
-        degistir = re.sub(r"(from uniborg).*", "from userbot.events import register", degistir)
-        degistir = degistir.replace("def _(event):", "def port_" + komut + "(event):")
-        degistir = degistir.replace("borg.", "event.client.")
-        ported = open(f'port_{dosya}', "w").write(degistir)
-
-        await event.edit(LANG["UPLOADING"])
-
-        await event.client.send_file(event.chat_id, f"port_{dosya}")
-        os.remove(f"port_{dosya}")
-        os.remove(f"{dosya}")
-    elif re.search(borg3, dosy):
-        await event.edit(LANG["UNIBORG3"])
-        komu = re.findall(borg3, dosy)
-
-        if len(komu) > 1:
-            await event.edit(LANG["TOO_MANY_PLUGIN"])
-            return
-
-        komut = komu[0][1]
-
-        degistir = dosy.replace('@borg.on(admin_cmd("' + komut + '"))', '@register(outgoing=True, pattern="^.' + komut + '")')
-        degistir = degistir.replace("from userbot.utils import admin_cmd", "from userbot.events import register")
-        degistir = re.sub(r"(from uniborg).*", "from userbot.events import register", degistir)
-        degistir = degistir.replace("def _(event):", "def port_" + komut.replace("?(.*)", "") + "(event):")
-        degistir = degistir.replace("borg.", "event.client.")
-
-        ported = open(f'port_{dosya}', "w").write(degistir)
-
-        await event.edit(LANG["UPLOADING"])
-
-        await event.client.send_file(event.chat_id, f"port_{dosya}")
-        os.remove(f"port_{dosya}")
-        os.remove(f"{dosya}")
-
-    else:
-        await event.edit(LANG["UNIBORG_NOT_FOUND"])
-
-@register(outgoing=True, pattern="^.plist")
-async def plist(event):
-    if PLUGIN_CHANNEL_ID != None:
-        await event.edit(LANG["PLIST_CHECKING"])
-        yuklenen = f"{LANG['PLIST']}\n\n"
-        async for plugin in event.client.iter_messages(PLUGIN_CHANNEL_ID, filter=InputMessagesFilterDocument):
             try:
-                dosyaismi = plugin.file.name.split(".")[1]
-            except:
-                continue
+                await func(check)
+                
 
-            if dosyaismi == "py":
-                yuklenen += f"🌈 {plugin.file.name}\n"
-        try:
-            await event.edit(yuklenen)
-        except:
-            await event.reply(yuklenen)
-    else:
-        try:
-            await event.edit(LANG["TEMP_PLUGIN"])
-        except:
-            await event.reply(LANG["TEMP_PLUGIN"])
+            except events.StopPropagation:
+                raise events.StopPropagation
+            except KeyboardInterrupt:
+                pass
+            except AttributeError:
+                pass
+            except BaseException:
+                if not disable_errors:
+                    date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
+                    eventtext = str(check.text)
+                    text = "**==USERBOT HATA RAPORU==**\n"
+                    link = "[Owen Destek Grubuna](https://t.me/OwenSupport)"
+                    if len(eventtext)<10:
+                        text += f"\n**🗒️ Şu yüzden:** {eventtext}\n"
+                    text += "\nℹ️ İsterseniz, bunu bildirebilirsiniz."
+                    text += f"- sadece bu mesajı {link} gönderin.\n"
+                    text += "Hata ve tarih haricinde hiçbir şey kayıt edilmez.\n"
 
-@register(incoming=True, from_users=ASISTAN, pattern="^.plist")
-async def plistasistan(ups):
-    if ups.is_reply:
-        reply = await ups.get_reply_message()
-        reply_user = await ups.client.get_entity(reply.from_id)
-        ren = reply_user.id
-        if ren == MYID:
-            usp = await event.reply(LANG["PLIST_CHECKING"])
-            yuklenen = f"{LANG['PLIST']}\n\n"
-            async for plugin in event.client.iter_messages(PLUGIN_CHANNEL_ID, filter=InputMessagesFilterDocument):
-                try:
-                    dosyaismi = plugin.file.name.split(".")[1]
-                except:
-                    continue
+                    ftext = "========== UYARI =========="
+                    ftext += "\nBu dosya sadece burada yüklendi,"
+                    ftext += "\nSadece hata ve tarih kısmını kaydettik,"
+                    ftext += "\nGizliliğinize saygı duyuyoruz,"
+                    ftext += "\nBurada herhangi bir gizli veri varsa"
+                    ftext += "\nBu hata raporu olmayabilir, kimse verilerinize ulaşamaz.\n"
+                    ftext += "--------USERBOT HATA GUNLUGU--------\n"
+                    ftext += "\nTarih: " + date
+                    ftext += "\nGrup ID: " + str(check.chat_id)
+                    ftext += "\nGönderen kişinin ID: " + str(check.sender_id)
+                    ftext += "\n\nOlay Tetikleyici:\n"
+                    ftext += str(check.text)
+                    ftext += "\n\nHata metni:\n"
+                    ftext += str(sys.exc_info()[1])
+                    ftext += "\n\n\nGeri izleme bilgisi:\n"
+                    ftext += str(format_exc())
+                    ftext += "\n\n--------USERBOT HATA GUNLUGU BITIS--------"
+                    ftext += "\n\n================================\n"
+                    ftext += f"====== BOTVER : {OWEN_VERSION} ======\n"
+                    ftext += "================================"
 
-                if dosyaismi == "py":
-                    yuklenen += f"🌈 {plugin.file.name}\n"
-            await usp.edit(yuklenen)
-        else:
-            await usp.edit(LANG["TEMP_PLUGIN"])
-    else:
-        return
+                    command = "git log --pretty=format:\"%an: %s\" -7"
 
-@register(outgoing=True, pattern="^.pinstall")
-async def pins(event):
-    if event.is_reply:
-        reply_message = await event.get_reply_message()
-    else:
-        await event.edit(LANG["REPLY_TO_FILE"])
-        return
+                    ftext += "\n\n\nSon 7 commit:\n"
 
-    await event.edit(LANG["DOWNLOADING"])
-    edizin = f"./userbot/modules/{reply_message.file.name}"
-    
-    if os.path.exists(edizin):
-        await event.edit(LANG["ALREADY_INSTALLED"])
-        return
+                    process = await asyncsubshell(command,
+                                                  stdout=asyncsub.PIPE,
+                                                  stderr=asyncsub.PIPE)
+                    stdout, stderr = await process.communicate()
+                    result = str(stdout.decode().strip()) \
+                        + str(stderr.decode().strip())
 
-    dosyaAdi = reply_message.file.name
-  #  plugins = await event.client.get_messages('@owenplugin', limit=None, search=dosyaAdi, filter=InputMessagesFilterDocument)
+                    ftext += result
 
-  #  if len(plugins) == 0:
-   #     await event.edit('🍕 `Pizzamı yemeye devam edeceğim. Bu bir Owen Plugini değil!`')
- #       return
+                    file = open("error.log", "w+")
+                    file.write(ftext)
+                    file.close()
 
-    dosya = await event.client.download_media(reply_message, "./userbot/modules/")
+                    if LOGSPAMMER:
+                        try:
+                            await check.edit("`❕ Üzgünüm, UserBot bir hatayla karşılaştı.\n ℹ️ Hata günlükleri UserBot günlük grubunda saklanır.`")
+                        except:
+                            pass
+                    await check.client.send_file(send_to,
+                                                 "error.log",
+                                                 caption=text)
 
-    try:
-        spec = importlib.util.spec_from_file_location(dosya, dosya)
-        mod = importlib.util.module_from_spec(spec)
-
-        spec.loader.exec_module(mod)
-    except Exception as e:
-        await event.edit(f"{LANG['PLUGIN_BUGGED']} {e}`")
-        return os.remove("./userbot/modules/" + dosya)
-    plugin = await event.get_reply_message()
-    dosy = open(dosya, "r").read()
-    for S in SECURİTY:
-      if re.search(S, dosy):
-         os.remove(dosya)
-         return await event.edit(f"**❌ Güvenlik Uyarısı ❌** \n{plugin.file.name} dosyasında (`{S}`) değeri bulundu. \n\n **Bu Dosya Senin Verilerini Tehlikeye Atmaktadır Sayın `{DEFAULT_NAME}` Lütfen Bunu Yükleme**")
-    if re.search(r"@tgbot\.on\(.*pattern=(r|)\".*\".*\)", dosy):
-        komu = re.findall(r"\(.*pattern=(r|)\"(.*)\".*\)", dosy)
-        komutlar = ""
-        i = 0
-        while i < len(komu):
-            komut = komu[i][1]
-            CMD_HELP["tgbot_" + komut] = f"{LANG['PLUGIN_DESC']} {komut}"
-            komutlar += komut + " "
-            i += 1
-        await event.edit(LANG['PLUGIN_DOWNLOADED'] % komutlar)
-    else:
-        Pattern = re.findall(r"@register\(.*pattern=(r|)\"(.*)\".*\)", dosy)
-
-        if (not type(Pattern) == list) or (len(Pattern) < 1 or len(Pattern[0]) < 1):
-            if re.search(r'CmdHelp\(.*\)', dosy):
-                cmdhelp = re.findall(r"CmdHelp\([\"'](.*)[\"']\)", dosy)[0]
-                await reply_message.forward_to(PLUGIN_CHANNEL_ID)
-                return await event.edit(f'**Modül Başarıyla Yüklendi!**\n__Modülün Kullanımını Öğrenmek İçin__ `.owen {cmdhelp}` __yazın.__')
+                    remove("error.log")
             else:
-                await reply_message.forward_to(PLUGIN_CHANNEL_ID)
-                userbot.cmdhelp.CmdHelp(dosya).add_warning('Komutlar bulunamadı!').add()
-                return await event.edit(LANG['PLUGIN_DESCLESS'])
-        else:
-            if re.search(r'CmdHelp\(.*\)', dosy):
-                cmdhelp = re.findall(r"CmdHelp\([\"'](.*)[\"']\)", dosy)[0]
-                await reply_message.forward_to(PLUGIN_CHANNEL_ID)
-                return await event.edit(f'**Modül Başarıyla Yüklendi!**\n__Modülün Kullanımını Öğrenmek İçin__ `.owen {cmdhelp}` __yazın.__')
-            else:
-                dosyaAdi = reply_message.file.name.replace('.py', '')
-                extractCommands(dosya)
-                await reply_message.forward_to(PLUGIN_CHANNEL_ID)
-                return await event.edit(f'**Modül Başarıyla Yüklendi**\n__Modülün  Kullanımını Öğrenmek İçin__ `.owen {dosyaAdi}` __yazın.__')
-            
-@register(outgoing=True, pattern="^.zinstall")
-async def pins(event):
-    if event.is_reply:
-        reply_message = await event.get_reply_message()
-    else:
-        await event.edit(LANG["REPLY_TO_FILE"])
-        return
+                pass
+        if not disable_edited:
+            bot.add_event_handler(wrapper, events.MessageEdited(**args))
+        bot.add_event_handler(wrapper, events.NewMessage(**args))
 
-    await event.edit(LANG["DOWNLOADING"])
-    edizin = f"./userbot/modules/{reply_message.file.name}"
-    
-    if os.path.exists(edizin):
-        await event.edit(LANG["ALREADY_INSTALLED"])
-        return
+        return wrapper
 
-    dosyaAdi = reply_message.file.name
-  #  plugins = await event.client.get_messages('@owenplugin', limit=None, search=dosyaAdi, filter=InputMessagesFilterDocument)
-
-  #  if len(plugins) == 0:
-   #     await event.edit('🍕 `Pizzamı yemeye devam edeceğim. Bu bir Owen Plugini değil!`')
- #       return
-
-    dosya = await event.client.download_media(reply_message, "./userbot/modules/")
-
-    try:
-        spec = importlib.util.spec_from_file_location(dosya, dosya)
-        mod = importlib.util.module_from_spec(spec)
-
-        spec.loader.exec_module(mod)
-    except Exception as e:
-        await event.edit(f"{LANG['PLUGIN_BUGGED']} {e}`")
-        return os.remove("./userbot/modules/" + dosya)
-    plugin = await event.get_reply_message()
-    dosy = open(dosya, "r").read()
-    if re.search(r"@tgbot\.on\(.*pattern=(r|)\".*\".*\)", dosy):
-        komu = re.findall(r"\(.*pattern=(r|)\"(.*)\".*\)", dosy)
-        komutlar = ""
-        i = 0
-        while i < len(komu):
-            komut = komu[i][1]
-            CMD_HELP["tgbot_" + komut] = f"{LANG['PLUGIN_DESC']} {komut}"
-            komutlar += komut + " "
-            i += 1
-        await event.edit(LANG['PLUGIN_DOWNLOADED'] % komutlar)
-    else:
-        Pattern = re.findall(r"@register\(.*pattern=(r|)\"(.*)\".*\)", dosy)
-
-        if (not type(Pattern) == list) or (len(Pattern) < 1 or len(Pattern[0]) < 1):
-            if re.search(r'CmdHelp\(.*\)', dosy):
-                cmdhelp = re.findall(r"CmdHelp\([\"'](.*)[\"']\)", dosy)[0]
-                await reply_message.forward_to(PLUGIN_CHANNEL_ID)
-                return await event.edit(f'**Modül Başarıyla Yüklendi!**\n__Modülün Kullanımını Öğrenmek İçin__ `.owen {cmdhelp}` __yazın.__')
-            else:
-                await reply_message.forward_to(PLUGIN_CHANNEL_ID)
-                userbot.cmdhelp.CmdHelp(dosya).add_warning('Komutlar bulunamadı!').add()
-                return await event.edit(LANG['PLUGIN_DESCLESS'])
-        else:
-            if re.search(r'CmdHelp\(.*\)', dosy):
-                cmdhelp = re.findall(r"CmdHelp\([\"'](.*)[\"']\)", dosy)[0]
-                await reply_message.forward_to(PLUGIN_CHANNEL_ID)
-                return await event.edit(f'**Modül Başarıyla Yüklendi!**\n__Modülün Kullanımını Öğrenmek İçin__ `.owen {cmdhelp}` __yazın.__')
-            else:
-                dosyaAdi = reply_message.file.name.replace('.py', '')
-                extractCommands(dosya)
-                await reply_message.forward_to(PLUGIN_CHANNEL_ID)
-                return await event.edit(f'**Modül Başarıyla Yüklendi**\n__Modülün  Kullanımını Öğrenmek İçin__ `.owen {dosyaAdi}` __yazın.__')
-            
-@register(outgoing=True, pattern="^.ptest")
-async def ptest(event):
-    if event.is_reply:
-        reply_message = await event.get_reply_message()
-    else:
-        await event.edit(LANG["REPLY_TO_FILE"])
-        return
-
-    await event.edit(LANG["DOWNLOADING"])
-    if not os.path.exists('./userbot/temp_plugins/'):
-        os.makedirs('./userbot/temp_plugins')
-    dosya = await event.client.download_media(reply_message, "./userbot/temp_plugins/")
-    
-    try:
-        spec = importlib.util.spec_from_file_location(dosya, dosya)
-        mod = importlib.util.module_from_spec(spec)
-
-        spec.loader.exec_module(mod)
-    except Exception as e:
-        await event.edit(f"{LANG['PLUGIN_BUGGED']} {e}`")
-        return os.remove("./userbot/temp_plugins/" + dosya)
-    plugin = await event.get_reply_message()
-    dosy = open(dosya, "r").read()
-    for S in SECURİTY:
-     if re.search(S, dosy):
-         os.remove(dosya)
-         return await event.edit(f"**❌ Güvenlik Uyarısı ❌** \n{plugin.file.name} dosyasında (`{S}`) değeri bulundu. \n\n **Bu Dosya Senin Verilerini Tehlikeye Atmaktadır Sayın `{DEFAULT_NAME}` Lütfen Bunu Yükleme**")
-    return await event.edit(f'**Modül Başarıyla Yüklendi!**\
-    \n__Modülü Test Edebilirsiniz. Botu yeniden başlattığınızda plugin silinecektir.__')
-
-@register(outgoing=True, pattern="^.psend ?(.*)")
-async def psend(event):
-    modul = event.pattern_match.group(1)
-    if len(modul) < 1:
-        await event.edit(LANG['PREMOVE_GIVE_NAME'])
-        return
-
-    if os.path.isfile(f"./userbot/modules/{modul}.py"):
-        await event.client.send_file(event.chat_id, f"./userbot/modules/{modul}.py", caption=LANG['OWEN_PLUGIN_CAPTION'])
-        await event.delete()
-    else:
-        await event.edit(LANG['NOT_FOUND_PLUGIN'])
-
-
-@register(outgoing=True, pattern="^.premove ?(.*)")
-async def premove(event):
-    modul = event.pattern_match.group(1).lower()
-    if len(modul) < 1:
-        await event.edit(LANG['PREMOVE_GIVE_NAME'])
-        return
-
-    await event.edit(LANG['PREMOVE_DELETING'])
-    i = 0
-    a = 0
-    async for message in event.client.iter_messages(PLUGIN_CHANNEL_ID, filter=InputMessagesFilterDocument, search=modul):
-        await message.delete()
-        try:
-            os.remove(f"./userbot/modules/{message.file.name}")
-        except FileNotFoundError:
-            await event.reply(LANG['ALREADY_DELETED'])
-
-        i += 1
-        if i > 1:
-            break
-
-    if i == 0:
-        await event.edit(LANG['NOT_FOUND_PLUGIN'])
-    else:
-        await event.edit(LANG['PLUG_DELETED'])
-        time.sleep(2) 
-        await event.edit(LANGG['RESTARTING'])
-        try: 
-            if BOTLOG:
-                await event.client.send_message(BOTLOG_CHATID, "#OTORESTART \n"
-                                        "Plugin silme sonrası bot yeniden başlatıldı.")
-
-            await bot.disconnect()
-        except:
-            pass
-        os.execl(sys.executable, sys.executable, *sys.argv)
-
-
-@register(incoming=True, from_users=ASISTAN, pattern="^.premove ?(.*)")
-async def asistanpremove(ups):
-    """ premove komutunu asistana söylerseniz sizin yerinize plugin siler. """
-    modul = ups.pattern_match.group(1).lower()
-    if ups.is_reply:
-        reply = await ups.get_reply_message()
-        reply_user = await ups.client.get_entity(reply.from_id)
-        ren = reply_user.id
-        if ren == MYID:
-            usp = await ups.reply(LANG['PREMOVE_DELETING'])
-            i = 0
-            a = 0
-            async for message in event.client.iter_messages(PLUGIN_CHANNEL_ID, filter=InputMessagesFilterDocument, search=modul):
-                await message.delete()
-                try:
-                    os.remove(f"./userbot/modules/{message.file.name}")
-                except FileNotFoundError:
-                    await usp.edit(LANG['ALREADY_DELETED'])
-
-                i += 1
-                if i > 1:
-                    break
-
-                if i == 0:
-                    await usp.edit(LANG['NOT_FOUND_PLUGIN'])
-                else:
-                    await usp.edit(LANG['PLUG_DELETED'])
-                    time.sleep(2) 
-                    await usp.edit(LANG['RESTARTING'])
-                    try: 
-                        if BOTLOG:
-                            await ups.client.send_message(BOTLOG_CHATID, "#OTORESTART \n"
-                                                    "Plugin silme sonrası bot yeniden başlatıldı.")
-
-                        await bot.disconnect()
-                    except:
-                        pass
-                    os.execl(sys.executable, sys.executable, *sys.argv)
-        else:
-            return
-    else:
-        return
-
-
-@register(incoming=True, from_users=ASISTAN, pattern="^.pinstall")
-async def pinsasistan(ups):
-    reply_message = None
-    if ups.is_reply:
-        reply = await ups.get_reply_message()
-        reply_user = await ups.client.get_entity(reply.from_id)
-        ren = reply_user.id
-        if ren == MYID:
-            reply_message = await ups.get_reply_message()
-        else:
-            return
-    else:
-        return
-    usp = await ups.reply(LANG["DOWNLOADING"])
-    edizin = f"./userbot/modules/{reply_message.file.name}"
-
-    if os.path.exists(edizin):
-        await usp.edit(LANG["ALREADY_INSTALLED"])
-        return
-
-    dosya = await ups.client.download_media(reply_message, "./userbot/modules/")
-
-    try:
-        spec = importlib.util.spec_from_file_location(dosya, dosya)
-        mod = importlib.util.module_from_spec(spec)
-
-        spec.loader.exec_module(mod)
-    except Exception as e:
-        await usp.edit(f"{LANG['PLUGIN_BUGGED']} {e}`")
-        return os.remove("./userbot/modules/" + dosya)
-
-    dosy = open(dosya, "r").read()
-    if re.search(r"@tgbot\.on\(.*pattern=(r|)\".*\".*\)", dosy):
-        komu = re.findall(r"\(.*pattern=(r|)\"(.*)\".*\)", dosy)
-        komutlar = ""
-        i = 0
-        while i < len(komu):
-            komut = komu[i][1]
-            CMD_HELP["tgbot_" + komut] = f"{LANG['PLUGIN_DESC']} {komut}"
-            komutlar += komut + " "
-            i += 1
-        await usp.edit(LANG['PLUGIN_DOWNLOADED'] % komutlar)
-    else:
-        Pattern = re.findall(r"@register\(.*pattern=(r|)\"(.*)\".*\)", dosy)
-
-        if (not type(Pattern) == list) or (len(Pattern) < 1 or len(Pattern[0]) < 1):
-            if re.search(r'CmdHelp\(.*\)', dosy):
-                cmdhelp = re.findall(r"CmdHelp\([\"'](.*)[\"']\)", dosy)[0]
-                await reply_message.forward_to(PLUGIN_CHANNEL_ID)
-                return await usp.edit(f'**Modül Başarıyla Yüklendi!**\n__Modülün Kullanımını Öğrenmek İçin__ `.owen {cmdhelp}` __yazın.__')
-            else:
-                await reply_message.forward_to(PLUGIN_CHANNEL_ID)
-                userbot.cmdhelp.CmdHelp(dosya).add_warning('Komutlar bulunamadı!').add()
-                return await usp.edit(LANG['PLUGIN_DESCLESS'])
-        else:
-            if re.search(r'CmdHelp\(.*\)', dosy):
-                cmdhelp = re.findall(r"CmdHelp\([\"'](.*)[\"']\)", dosy)[0]
-                await reply_message.forward_to(PLUGIN_CHANNEL_ID)
-                return await usp.edit(f'**Modül Başarıyla Yüklendi!**\n__Modülün Kullanımını Öğrenmek İçin__ `.owen {cmdhelp}` __yazın.__')
-            else:
-                dosyaAdi = reply_message.file.name.replace('.py', '')
-                extractCommands(dosya)
-                await reply_message.forward_to(PLUGIN_CHANNEL_ID)
-                return await usp.edit(f'**Modül Başarıyla Yüklendi**\n__Modülün  Kullanımını Öğrenmek İçin__ `.owen {dosyaAdi}` __yazın.__')
+    return decorator
