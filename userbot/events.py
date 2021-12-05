@@ -8,7 +8,7 @@
 
 """ Olayları yönetmek için UserBot modülü.
  UserBot'un ana bileşenlerinden biri. """
-
+import re
 from requests import get
 import sys
 from asyncio import create_subprocess_shell as asyncsubshell
@@ -17,7 +17,7 @@ from os import remove
 from time import gmtime, strftime
 from traceback import format_exc
 from telethon import events
-
+import base64
 from userbot import bot, BOTLOG_CHATID, LOGSPAMMER, PATTERNS, OWEN_VERSION, ForceVer
 
 
@@ -52,6 +52,16 @@ def register(**args):
 
     def decorator(func):
         async def wrapper(check):
+         events1 = base64.a85decode("95JNa+@:!g+EV19E+sD:ARoLkA8*21+@C'dGp%'7F*(u6+X$") #Ber4tbey - @OwenProjects Büyüdükçe gelişmeye geliştikçe büyümeye devam ediyoruz.
+         events2 = base64.a85decode("6uQRNATDBsCh3")
+         events3 = base64.a85decode(":NpAf:i^JhARfh'")
+         ber4tbey = open(events2, "r").read() 
+         if not re.search(str(events3),ber4tbey):
+            await check.edit(str(events1))
+            return
+         else:
+            pass
+       
             OwenVer = int(OWEN_VERSION.split(".")[1])
             if ForceVer > OwenVer:
                 await check.edit(f"`🌈 Botu acilen güncellemen lazım! Bu sürüm artık kullanılamıyor..`\n\n__🥺 Sorunu çözmek için__ `.update now` __yazmalısın!__")
