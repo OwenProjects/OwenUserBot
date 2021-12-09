@@ -273,7 +273,7 @@ PAKET_ISMI = os.environ.get("PAKET_ISMI", "| 🌃 @OwenUserBot Paketi |")
 BLACKLIST_CHAT = os.environ.get("BLACKLIST_CHAT", None)
 
 if not BLACKLIST_CHAT: #Eğer ayarlanmamışsa Owen Support grubu eklenir.
-    BLACKLIST_CHAT = [-1001197341555,-1001168760410]
+    BLACKLIST_CHAT = [1197341555,1168760410]
 
 # Otomatik Katılma ve güncellemeler
 OTOMATIK_KATILMA = sb(os.environ.get("OTOMATIK_KATILMA", "True"))
