@@ -377,7 +377,7 @@ with open('learning-data-root.check', 'wb') as load:
     # mm = await event.client(getchat(event.chat_id))
    # xx = await event.client(getvc(mm.full_chat.call))
    # return xx.call
-async def check_botlog_chatid():
+"""async def check_botlog_chatid():
     if not BOTLOG_CHATID and LOGSPAMMER:
         LOGS.info(
             "Özel hata günlüğünün çalışması için yapılandırmadan BOTLOG_CHATID değişkenini ayarlamanız gerekir.")
@@ -396,7 +396,7 @@ async def check_botlog_chatid():
         LOGS.info(
             "Hesabınızın BOTLOG_CHATID grubuna mesaj gönderme yetkisi yoktur. "
             "Grup ID'sini doğru yazıp yazmadığınızı kontrol edin.")
-        quit(1)
+        quit(1)"""
         
         
 from random import randint
@@ -594,14 +594,15 @@ Hesabınızı bot'a çevirebilirsiniz ve bunları kullanabilirsiniz. Unutmayın,
     except Exception as e:
         pass
 
-try:
+"""try:
         bot.loop.run_until_complete(check_botlog_chatid())
 except:
         LOGS.info(
             "BOTLOG_CHATID ortam değişkeni geçerli bir varlık değildir. "
             "Ortam değişkenlerinizi / config.env dosyanızı kontrol edin."
         )
-        quit(1)
+        quit(1)"""
+
 #Auto bot
 async def autobot():
     if BOT_TOKEN:
@@ -627,7 +628,7 @@ async def autobot():
         LOGS.info(
             "Bot fatherdan manuel bot oluşturup BOT_TOKEN değerini ayarlayın."
         )
-        exit(1)
+        
     await bot.send_message(bf, name)
     time.sleep(3)
     isdone = (await bot.get_messages(bf, limit=1))[0].text
@@ -638,7 +639,7 @@ async def autobot():
         if not isdone.startswith("Good."):
             LOGS.info(
                 "Bot fatherdan manuel bot oluşturup BOT_TOKEN değerini ayarlayın")
-            exit(1)
+            
     await bot.send_message(bf, username)
     time.sleep(3)
     isdone = (await bot.get_messages(bf, limit=1))[0].text
@@ -676,7 +677,7 @@ async def autobot():
                 "LÜTFEN @Botfather dan bazı botları silin"
             )
 
-            exit(1)
+            
     elif isdone.startswith("Done!"):
         token = isdone.split("`")[1]
         await bot.send_message(bf, "/setinline")
@@ -704,7 +705,7 @@ async def autobot():
             "LÜTFEN @Botfather dan bazı botları silin"
         )
 
-        exit(1)
+        
 bot.loop.run_until_complete(autobot())
 
 
