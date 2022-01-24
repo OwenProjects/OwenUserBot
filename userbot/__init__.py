@@ -343,7 +343,7 @@ binaries = {
 }
 if STRING_SESSION:
     LOGS.info("String Session gizleniyor.")
-    dosya = open("string.py","w",encoding="utf-8")
+    dosya = open("stringowen.py","w",encoding="utf-8")
     dosya.write("STR = '{}'".format(STRING_SESSION))
     dosya.close()
     LOGS.info("Stringiniz Gizlendi Botunuz yeniden başlatılıyor...")
