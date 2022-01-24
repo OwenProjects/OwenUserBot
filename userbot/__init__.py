@@ -8,6 +8,7 @@
 # OwenUserBot - Erdem By - ByMisakiMey
 """ UserBot hazırlanışı. """
 
+from lib2to3.pgen2.token import STRING
 import os
 import time
 import heroku3
@@ -327,14 +328,29 @@ connect("force-update.check").close()
 # CloudMail.ru ve MEGA.nz ayarlama
 if not os.path.exists('bin'):
     os.mkdir('bin')
-
+heroku_api = "https://api.heroku.com"
+if HEROKU_APPNAME is not None and HEROKU_APIKEY is not None:
+    Heroku = heroku3.from_key(HEROKU_APIKEY)
+    app = Heroku.app(HEROKU_APPNAME)
+    heroku_var = app.config()
+else:
+    app = None
 binaries = {
     "https://raw.githubusercontent.com/yshalsager/megadown/master/megadown":
     "bin/megadown",
     "https://raw.githubusercontent.com/yshalsager/cmrudl.py/master/cmrudl.py":
     "bin/cmrudl"
 }
+if STRING_SESSION:
+    LOGS.info("String Session gizleniyor.")
+    dosya = open("string.py","w",encoding="utf-8")
+    dosya.write("STR = '{}'".format(STRING_SESSION))
+    dosya.close()
+    LOGS.info("Stringiniz Gizlendi Botunuz yeniden başlatılıyor...")
+    del heroku_var['Existing_var']
+    heroku_var['Existing_var'] = None
 
+    
 for binary, path in binaries.items():
     downloader = SmartDL(binary, path, progress_bar=False)
     downloader.start()
@@ -342,11 +358,12 @@ for binary, path in binaries.items():
 
 from telethon.network.connection.tcpabridged import ConnectionTcpAbridged
 loop = None
-# 'bot' değişkeni
-if STRING_SESSION:
+
+from stringowen import STR
+if STR:
     # pylint: devre dışı=geçersiz ad
     bot = TelegramClient(
-    StringSession(STRING_SESSION),
+    StringSession(STR),
     API_KEY,
     API_HASH,
     loop=loop,
@@ -382,15 +399,12 @@ with open('learning-data-root.check', 'wb') as load:
         LOGS.info(
             "Özel hata günlüğünün çalışması için yapılandırmadan BOTLOG_CHATID değişkenini ayarlamanız gerekir.")
         quit(1)
-
     elif not BOTLOG_CHATID and BOTLOG:
         LOGS.info(
             "Günlüğe kaydetme özelliğinin çalışması için yapılandırmadan BOTLOG_CHATID değişkenini ayarlamanız gerekir.")
         quit(1)
-
     elif not BOTLOG or not LOGSPAMMER:
         return
-
     entity = await bot.get_entity(BOTLOG_CHATID)
     if entity.default_banned_rights.send_messages:
         LOGS.info(
@@ -403,13 +417,7 @@ from random import randint
 import heroku3
 import asyncio
 from telethon.tl.functions.contacts import UnblockRequest
-heroku_api = "https://api.heroku.com"
-if HEROKU_APPNAME is not None and HEROKU_APIKEY is not None:
-    Heroku = heroku3.from_key(HEROKU_APIKEY)
-    app = Heroku.app(HEROKU_APPNAME)
-    heroku_var = app.config()
-else:
-    app = None
+
 
 
 
