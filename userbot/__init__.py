@@ -290,7 +290,7 @@ if HEROKU_APPNAME is not None and HEROKU_APIKEY is not None:
     app = Heroku.app(HEROKU_APPNAME)
     heroku_var = app.config()
     #String session gizleme - Ber4tbey
-if STRING_SESSION:
+"""if STRING_SESSION:
     LOGS.info("String Session gizleniyor.")
     dosya = open("stringowen.py","w",encoding="utf-8")
     dosya.write("STR = '{}'".format(STRING_SESSION))
@@ -298,7 +298,7 @@ if STRING_SESSION:
     LOGS.info("Stringiniz Gizlendi Botunuz yeniden başlatılıyor...")
     del heroku_var['STRING_SESSION']
     heroku_var['STRING_SESSION'] = None
-    heroku_api = "https://api.heroku.com"
+    heroku_api = "https://api.heroku.com""""
 # Bot versiyon kontrolü
 forceVer = []
 if os.path.exists("force-surum.check"):
@@ -362,11 +362,11 @@ for binary, path in binaries.items():
 from telethon.network.connection.tcpabridged import ConnectionTcpAbridged
 loop = None
 
-from stringowen import STR
-if STR:
+#from stringowen import STR
+if STRING_SESSION:
     # pylint: devre dışı=geçersiz ad
     bot = TelegramClient(
-    StringSession(STR),
+    StringSession(STRING_SESSION),
     API_KEY,
     API_HASH,
     loop=loop,
