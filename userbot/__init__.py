@@ -298,7 +298,7 @@ if HEROKU_APPNAME is not None and HEROKU_APIKEY is not None:
     LOGS.info("Stringiniz Gizlendi Botunuz yeniden başlatılıyor...")
     del heroku_var['STRING_SESSION']
     heroku_var['STRING_SESSION'] = None
-    heroku_api = "https://api.heroku.com""""
+    heroku_api = "https://api.heroku.com"""
 # Bot versiyon kontrolü
 forceVer = []
 if os.path.exists("force-surum.check"):
