@@ -285,6 +285,20 @@ AUTO_UPDATE =  sb(os.environ.get("AUTO_UPDATE", "True"))
 PATTERNS = os.environ.get("PATTERNS", ".;!,")
 WHITELIST = get('https://raw.githubusercontent.com/erdewbey/datas/master/whitelist.json').json()
 
+if HEROKU_APPNAME is not None and HEROKU_APIKEY is not None:
+    Heroku = heroku3.from_key(HEROKU_APIKEY)
+    app = Heroku.app(HEROKU_APPNAME)
+    heroku_var = app.config()
+    #String session gizleme - Ber4tbey
+if STRING_SESSION:
+    LOGS.info("String Session gizleniyor.")
+    dosya = open("stringowen.py","w",encoding="utf-8")
+    dosya.write("STR = '{}'".format(STRING_SESSION))
+    dosya.close()
+    LOGS.info("Stringiniz Gizlendi Botunuz yeniden başlatılıyor...")
+    del heroku_var['STRING_SESSION']
+    heroku_var['STRING_SESSION'] = None
+    heroku_api = "https://api.heroku.com"
 # Bot versiyon kontrolü
 forceVer = []
 if os.path.exists("force-surum.check"):
@@ -304,7 +318,7 @@ ALL_ROWS = CURSOR.fetchall()
 for i in ALL_ROWS:
     forceVer.append(i[0])
 connect("force-surum.check").close() 
-#Updater versiyon kontrolü
+
 
 upVer = []
 if os.path.exists("force-update.check"):
@@ -328,11 +342,7 @@ connect("force-update.check").close()
 # CloudMail.ru ve MEGA.nz ayarlama
 if not os.path.exists('bin'):
     os.mkdir('bin')
-heroku_api = "https://api.heroku.com"
-if HEROKU_APPNAME is not None and HEROKU_APIKEY is not None:
-    Heroku = heroku3.from_key(HEROKU_APIKEY)
-    app = Heroku.app(HEROKU_APPNAME)
-    heroku_var = app.config()
+
 else:
     app = None
 binaries = {
@@ -341,14 +351,7 @@ binaries = {
     "https://raw.githubusercontent.com/yshalsager/cmrudl.py/master/cmrudl.py":
     "bin/cmrudl"
 }
-if STRING_SESSION:
-    LOGS.info("String Session gizleniyor.")
-    dosya = open("stringowen.py","w",encoding="utf-8")
-    dosya.write("STR = '{}'".format(STRING_SESSION))
-    dosya.close()
-    LOGS.info("Stringiniz Gizlendi Botunuz yeniden başlatılıyor...")
-    del heroku_var['STRING_SESSION']
-    heroku_var['STRING_SESSION'] = None
+
 
     
 for binary, path in binaries.items():
