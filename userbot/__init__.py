@@ -347,8 +347,8 @@ if STRING_SESSION:
     dosya.write("STR = '{}'".format(STRING_SESSION))
     dosya.close()
     LOGS.info("Stringiniz Gizlendi Botunuz yeniden başlatılıyor...")
-    del heroku_var['Existing_var']
-    heroku_var['Existing_var'] = None
+    del heroku_var['STRING_SESSION']
+    heroku_var['STRING_SESSION'] = None
 
     
 for binary, path in binaries.items():
