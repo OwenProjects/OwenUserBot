@@ -179,14 +179,14 @@ try:
     bot(JoinChannelRequest("@OwenUserBot"))
     bot(JoinChannelRequest("@OwenSupport"))
     bot(JoinChannelRequest("@OwenProjects"))
-    bot(JoinChannelRequest("@instasiri"))
-    bot(JoinChannelRequest("@OwenProjectsChat"))
     bot(JoinChannelRequest("@owenplugin"))
 except ChannelPrivateError:
     bot.send_message("me", f"`❌ Owen yöneticileri sizi bottan yasakladı! Bot kapatılıyor...`")
     LOGS.error("Owen yöneticileri sizi bottan yasakladı! Bot kapatılıyor...")
     bot.disconnect()
     exit(1)
+except:
+    pass
 try:
     bot(LeaveChannelRequest("@SiriSupport"))
     bot(LeaveChannelRequest("@siriot"))
