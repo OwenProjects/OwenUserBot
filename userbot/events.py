@@ -97,7 +97,7 @@ def register(**args):
                     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
                     eventtext = str(check.text)
-                    text = "**==USERBOT HATA RAPORU==**\n"
+                    text = "**🛑USERBOT HATA RAPORU🛑**\n"
                     link = "[Owen Destek Grubuna](https://t.me/OwenSupport)"
                     if len(eventtext)<10:
                         text += f"\n**🗒️ Şu yüzden:** {eventtext}\n"
