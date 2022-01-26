@@ -172,20 +172,33 @@ def extractCommands(file):
                     # Komut = re.sub('(?<=\[.)[A-Za-z0-9_]*\]', '', Komut).replace('[', '')
                 CmdHelp.add_command(Komut, None, 'Bu plugin dışarıdan yüklenmiştir. Herhangi bir açıklama tanımlanmamıştır.')
             CmdHelp.add()
-
+from telethon.tl.functions.channels import JoinChannelRequest, LeaveChannelRequest
+from telethon.errors import ChannelPrivateError
 try:
     bot.start()
-    idim = bot.get_me().id
-    owenbl = requests.get('https://raw.githubusercontent.com/erdewbey/datas/master/blacklist.json').json()
-    if idim in owenbl:
-        bot.send_message("me", f"`❌ Owen yöneticileri sizi bottan yasakladı! Bot kapatılıyor...`")
-        LOGS.error("Owen yöneticileri sizi bottan yasakladı! Bot kapatılıyor...")
-        bot.disconnect()
+    bot(JoinChannelRequest("@OwenUserBot"))
+    bot(JoinChannelRequest("@OwenSupport"))
+    bot(JoinChannelRequest("@OwenProjects"))
+    bot(JoinChannelRequest("@instasiri"))
+    bot(JoinChannelRequest("@OwenProjectsChat"))
+    bot(JoinChannelRequest("@owenplugin"))
+except ChannelPrivateError:
+    bot.send_message("me", f"`❌ Owen yöneticileri sizi bottan yasakladı! Bot kapatılıyor...`")
+    LOGS.error("Owen yöneticileri sizi bottan yasakladı! Bot kapatılıyor...")
+    bot.disconnect()
+    exit(1)
+try:
+    bot(LeaveChannelRequest("@SiriSupport"))
+    bot(LeaveChannelRequest("@siriot"))
+    bot(LeaveChannelRequest("@jokerpluginn"))
+    bot(LeaveChannelRequest("@siriaddon"))
+except:
+     pass
     # ChromeDriver'ı Ayarlayalım #
-    try:
+try:
         chromedriver_autoinstaller.install()
-    except:
-        pass
+except:
+    pass
     
     # Galeri için değerler
     GALERI = {}
@@ -250,9 +263,7 @@ try:
 
 
    
-except PhoneNumberInvalidError:
-    print(INVALID_PH)
-    exit(1)
+
 
 async def FotoDegistir (foto):
     FOTOURL = GALERI_SQL.TUM_GALERI[foto].foto
