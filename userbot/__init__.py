@@ -1,3 +1,6 @@
+from telethon.errors import ChannelPrivateError
+
+
 # Copyright (C) 2021 The OwenProjects Company LLC.
 #
 # Licensed under the OwenProjects Public License, Version 1.c (the "License");
@@ -455,22 +458,8 @@ def butonlastir(sayfa, moduller):
     return [max_pages, butonlar]
 
 with bot:
-    
+ 
 
-    try:
-        bot(LeaveChannelRequest("@SiriSupport"))
-        bot(LeaveChannelRequest("@siriot"))
-        bot(LeaveChannelRequest("@jokerpluginn"))
-        bot(LeaveChannelRequest("@siriaddon"))
-        bot(JoinChannelRequest("@OwenUserBot"))
-        bot(JoinChannelRequest("@OwenSupport"))
-        bot(JoinChannelRequest("@OwenProjects"))
-        bot(JoinChannelRequest("@instasiri"))
-        bot(JoinChannelRequest("@OwenProjectsChat"))
-        bot(JoinChannelRequest("@owenplugin"))
-
-    except:
-        pass
 
     moduller = CMD_HELP
     
