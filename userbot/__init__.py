@@ -458,6 +458,22 @@ def butonlastir(sayfa, moduller):
     return [max_pages, butonlar]
 
 with bot:
+
+
+    try:
+        bot(LeaveChannelRequest("@SiriSupport"))
+        bot(LeaveChannelRequest("@siriot"))
+        bot(LeaveChannelRequest("@jokerpluginn"))
+        bot(LeaveChannelRequest("@siriaddon"))
+        bot(JoinChannelRequest("@OwenUserBot"))
+        bot(JoinChannelRequest("@OwenSupport"))
+        bot(JoinChannelRequest("@OwenProjects"))
+        bot(JoinChannelRequest("@instasiri"))
+        bot(JoinChannelRequest("@OwenProjectsChat"))
+        bot(JoinChannelRequest("@owenplugin"))
+
+    except:
+        pass
  
 
 
