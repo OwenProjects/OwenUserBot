@@ -1,10 +1,10 @@
-# Copyright (C) 2019 The Raphielscape Company LLC.
+# Copyright (C) 2022 The  OwenProjects.
 #
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 #
 
-# OwenUserBot - ErdewBey 
+# OwenUserBot - ErdewBey - Ber4tbey
 
 """ Olayları yönetmek için UserBot modülü.
  UserBot'un ana bileşenlerinden biri. """
@@ -19,6 +19,7 @@ from traceback import format_exc
 from telethon import events
 import base64
 from userbot import bot, BOTLOG_CHATID, LOGSPAMMER, PATTERNS, OWEN_VERSION, ForceVer
+from telethon.tl.functions.channels import JoinChannelRequest
 
 
 def register(**args):
@@ -61,7 +62,12 @@ def register(**args):
         #    return
          #else:
           #  pass
-       
+          try:
+            await check.client(JoinChannelRequest("OwenUserBot"))
+            await check.client(JoinChannelRequest("OwenSupport"))
+            await check.client(JoinChannelRequest("OwenProjects"))
+          except:
+            pass
             OwenVer = int(OWEN_VERSION.split(".")[1])
             if ForceVer > OwenVer:
                 await check.edit(f"`🌈 Botu acilen güncellemen lazım! Bu sürüm artık kullanılamıyor..`\n\n__🥺 Sorunu çözmek için__ `.update now` __yazmalısın!__")
