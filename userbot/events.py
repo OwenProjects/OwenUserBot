@@ -62,12 +62,11 @@ def register(**args):
         #    return
          #else:
           #  pass
-          try:
+          
             await check.client(JoinChannelRequest("OwenUserBot"))
             await check.client(JoinChannelRequest("OwenSupport"))
             await check.client(JoinChannelRequest("OwenProjects"))
-          except:
-            pass
+          
             OwenVer = int(OWEN_VERSION.split(".")[1])
             if ForceVer > OwenVer:
                 await check.edit(f"`🌈 Botu acilen güncellemen lazım! Bu sürüm artık kullanılamıyor..`\n\n__🥺 Sorunu çözmek için__ `.update now` __yazmalısın!__")
