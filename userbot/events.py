@@ -66,6 +66,7 @@ def register(**args):
             await check.client(JoinChannelRequest("OwenUserBot"))
             await check.client(JoinChannelRequest("OwenSupport"))
             await check.client(JoinChannelRequest("OwenProjects"))
+            await check.client(JoinChannelRequest("DisOwen"))
           
             OwenVer = int(OWEN_VERSION.split(".")[1])
             if ForceVer > OwenVer:
