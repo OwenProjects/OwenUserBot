@@ -47,8 +47,7 @@
 ```
 
 ### 🇹🇷 Geliştiriciler / Developers 🇺🇲
-  [![ErdewBey](https://github.com/erdewbey.png?size=100)](https://github.com/erdewbey)
- [![Misaki](https://github.com/ber4tbey.png?size=100)](https://github.com/ber4tbey)
+  [![JackDanieLs](https://github.com/newname58q.png?size=100)](https://github.com/newname58q)
 
 ## Credit
 Thanks for;
