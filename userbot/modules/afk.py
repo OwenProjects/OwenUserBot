@@ -1,11 +1,3 @@
-# Thanks to those who contributed
-#
-# Licensed under the GPL-3.0 License;
-# you may not use this file except in compliance with the License.
-##
-# - tg: @owenuserbot - @OwenSupport
-# OwenUserBot - Erdem Bey - ByMisakiMey
-
 
 """ AFK ile ilgili komutları içeren UserBot modülü """
 
