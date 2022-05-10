@@ -1,10 +1,4 @@
-# Copyright (C) 2021 Erdem Bey.
-#
-# Licensed under the GPL-3.0 License;
-# you may not use this file except in compliance with the License.
-#
 
-# OwenUserBot - ErdewBey - Midy - ByMisakiMey
 
 from asyncio import sleep
 from json import loads
