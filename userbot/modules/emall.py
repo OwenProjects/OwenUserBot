@@ -1,5 +1,4 @@
-# OwenUsebot ErdewBey / Bymisakimey
-# Kullanırken info Kısmını Silmeyiniz Ve Credit Vermeyi Unutmayın.
+
 import random
 import asyncio
 from userbot.events import register 
