@@ -1,16 +1,4 @@
 from telethon.errors import ChannelPrivateError
-
-
-# Copyright (C) 2021 The OwenProjects Company LLC.
-#
-# Licensed under the OwenProjects Public License, Version 1.c (the "License");
-# you may not use this file except in compliance with the License.
-#
-
-# Thanks github.com/spechide for creating inline bot support.
-# OwenUserBot - Erdem By - ByMisakiMey
-""" UserBot hazırlanışı. """
-
 from lib2to3.pgen2.token import STRING
 import os
 import time
