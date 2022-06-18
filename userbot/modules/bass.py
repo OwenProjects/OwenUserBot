@@ -1,5 +1,5 @@
 #OwenProjects-Owenuserbot
-#ByMisakiMey-erdewbey-İxelizm
+#jackdanielssx
 import asyncio
 import io, os, math
 from io import BytesIO
