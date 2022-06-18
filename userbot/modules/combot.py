@@ -1,4 +1,4 @@
-# OwenUserBot - ErdewBey 
+# OwenUserBot - jackdanielssx 
 
 from telethon.errors import (ChannelInvalidError, ChannelPrivateError, ChannelPublicGroupNaError)
 from emoji import emojize
