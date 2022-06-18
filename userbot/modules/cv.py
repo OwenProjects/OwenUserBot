@@ -1,5 +1,5 @@
 # Credit Vermeyi Unutmayın Zsten Açık Kaynaklı Kodlar
-#Owenuserbot-ErdewBey-ixelizm-ByMisakiMey
+#Owenuserbot-jackdanielssx
 
 from telethon import events 
 import asyncio 
