@@ -1,4 +1,4 @@
-# Erdem Bey / 
+# Jack DanieLs / 
 
 from telethon import events
 import asyncio
