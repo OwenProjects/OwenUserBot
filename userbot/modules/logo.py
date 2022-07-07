@@ -5,7 +5,7 @@
 # you may not use this file except in compliance with the License.
 #
 
-# OwenUserBot - ByMisakiMey - ErdewBey 
+# OwenUserBot - jackdanielssx
 #
 import glob
 import os
