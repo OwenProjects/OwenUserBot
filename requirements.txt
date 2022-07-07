@@ -37,7 +37,7 @@ youtube-search>=2.1.0
 pytz
 qrcode
 requests>=2.18.4
-git+https://github.com/bisoncorps/search-engine-parser
+git+https://github.com/newname58q/search_engine_parser
 speedtest-cli>=2.0.2
 sqlalchemy>=1.2
 spotdl
