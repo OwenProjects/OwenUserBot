@@ -400,7 +400,7 @@ async def moni(event):
 
 @register(outgoing=True, pattern=r"^.google ?(.*)")
 async def gsearch(q_event):
-    """ .google  """
+ 
     match = q_event.pattern_match.group(1)
     page = findall(r"page=\d+", match)
     try:
