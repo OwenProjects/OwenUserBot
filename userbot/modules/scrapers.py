@@ -4,7 +4,7 @@
 # you may not use this file except in compliance with the License.
 #
 
-# OwenUserBot - ErdewBey - Midy
+# OwenUserBot - jackdanielssx
 
 
 """ Diğer kategorilere uymayan fazlalık komutların yer aldığı modül. """
