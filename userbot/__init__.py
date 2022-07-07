@@ -68,7 +68,7 @@ if not LANGUAGE in ["EN", "TR", "AZ", "UZ", "DEFAULT"]:
     LANGUAGE = "DEFAULT"
     
 # Owen versiyon
-OWEN_VERSION = "v5.5"
+OWEN_VERSION = "v6.0"
 
 MAX_MESSAGE_SIZE_LIMIT = 4095
 # Telegram API KEY ve HASH
