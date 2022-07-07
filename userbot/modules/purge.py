@@ -4,7 +4,7 @@
 # you may not use this file except in compliance with the License.
 #
 
-# Owen UserBot - Erdem Bey
+# Owen UserBot - jackdanielssx
 
 
 """ Gereksiz mesajları temizlemek için UserBot modülü (genellikle spam veya ot). """
