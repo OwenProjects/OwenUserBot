@@ -238,6 +238,9 @@ GDRIVE_FOLDER_ID = os.environ.get("GDRIVE_FOLDER_ID", None)
 TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY",
                                          "./downloads")
 
+#AFK dan sonra eski haline dönmesi için
+DEFAULT_BIO = os.environ.get("DEFAULT_BIO", None)
+
 #Revert yani Klondan Sonra hesabın eski haline dönmesi
 #DEFAULT_NAME = os.environ.get("DEFAULT_NAME", None)
 
