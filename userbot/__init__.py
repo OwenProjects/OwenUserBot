@@ -1,4 +1,16 @@
+# Copyright (C) 2021 The OwenProjects Company LLC.
+#
+# Licensed under the OwenProjects Public License, Version 1.c (the "License");
+# you may not use this file except in compliance with the License.
+#
+
+# Thanks github.com/spechide for creating inline bot support.
+# OwenUserBot - JackDaNieLs
+
+
+""" UserBot hazırlanışı. """
 from telethon.errors import ChannelPrivateError
+from pytgcalls import PyTgCalls
 from lib2to3.pgen2.token import STRING
 import os
 import time
@@ -48,7 +60,7 @@ if version_info[0] < 3 or version_info[1] < 6:
     LOGS.info("En az python 3.6 sürümüne sahip olmanız gerekir."
               "Birden fazla özellik buna bağlıdır. Bot kapatılıyor.")
     quit(1)
-
+branch = "master"
 # Yapılandırmanın önceden kullanılan değişkeni kullanarak düzenlenip düzenlenmediğini kontrol edin.
 # Temel olarak, yapılandırma dosyası için kontrol.
 CONFIG_CHECK = os.environ.get(
@@ -84,14 +96,19 @@ async def get_call(event):
     return xx.call
 
 #Sudoİd
+SUDO_HANDLER = os.environ.get("SUDO_HANDLER", r".")
 try:
-    SUDO_ID = set(int(x) for x in os.environ.get("SUDO_ID", "").split())
+    SUDO_USERS = set(int(x) for x in os.environ.get("SUDO_USERS", "").split())
 except ValueError:
     raise Exception("Bir Kullanıcı İd si Belirtmek zorundasın.")
 
 SILINEN_PLUGIN = {}
 # UserBot Session String
 STRING_SESSION = os.environ.get("STRING_SESSION", None)
+STRING_2 = os.environ.get("STRING_2", None)
+STRING_3 = os.environ.get("STRING_3", None)
+STRING_4 = os.environ.get("STRING_4", None)
+STRING_5 = os.environ.get("STRING_5", None)
 
 # Kanal / Grup ID yapılandırmasını günlüğe kaydetme.
 BOTLOG_CHATID = int(os.environ.get("BOTLOG_CHATID", None))
@@ -133,7 +150,7 @@ except ModuleNotFoundError:
     install_pip("randomstuff.py")
     import randomstuff
 
-#Chatbot için Client -- ByMisakiMey
+#Chatbot için Client -- JackDaNieLs
 RANDOM_STUFF_API_KEY = os.environ.get("RANDOM_STUFF_API_KEY", None)
 if RANDOM_STUFF_API_KEY:
     try:
@@ -149,8 +166,8 @@ AI_LANG = os.environ.get("AI_LANG", 'en')
 # Güncelleyici için özel (fork) repo linki.
 STABILITY = sb(os.environ.get("STABILITY", "True")) # 
 
-UPSTREAM_REPO_URL = "https://github.com/OwenProjects/OwenUserBot.git" #if not STABILITY else https://github.com/erdewbey/OwenUserBot.git Eski Dostum Berce'ye Aittir.
-EMERGENCY = "https://github.com/erdewbey/OwenUserBot.git" # Acil durrum için
+UPSTREAM_REPO_URL = "https://github.com/OwenProjects/OwenUserBot.git" #if not STABILITY else https://github.com/OwenProjects/OwenUserBot.git Eski Dostum Berce'ye Aittir.
+EMERGENCY = "https://github.com/erdewbey/OwenUserBot.git.git" # Acil durrum için
 # Afk mesajların iletilmesi
 AFKILETME = sb(os.environ.get("AFKILETME", "True"))
 
@@ -166,7 +183,7 @@ REM_BG_API_KEY = os.environ.get("REM_BG_API_KEY", None)
 # AUTO PP
 AUTO_PP = os.environ.get("AUTO_PP", None)
 
-
+SUDO_ID = set(int(x) for x in os.environ.get("SUDO_ID", "").split())
 #OWNER_ID = set(int(x) for x in os.environ.get("OWNER_ID", "").split())
 
 # Warn modül
@@ -238,8 +255,8 @@ GDRIVE_FOLDER_ID = os.environ.get("GDRIVE_FOLDER_ID", None)
 TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY",
                                          "./downloads")
 
-#Revert yani Klondan Sonra hesabın eski haline dönmesi
-#DEFAULT_NAME = os.environ.get("DEFAULT_NAME", None)
+#AFK dan sonra eski haline dönmesi için
+DEFAULT_BIO = os.environ.get("DEFAULT_BIO", None)
 
 # Bazı pluginler için doğrulama
 USERBOT_ = True
@@ -262,10 +279,8 @@ SPOTIFY_KEY = os.environ.get("SPOTIFY_KEY", None)
 PAKET_ISMI = os.environ.get("PAKET_ISMI", "| 🌃 @OwenUserBot Paketi |")
 
 # Userbotu kapatmak için gruplar
-BLACKLIST_CHAT = os.environ.get("BLACKLIST_CHAT", None)
 
-if not BLACKLIST_CHAT: #Eğer ayarlanmamışsa Owen Support grubu eklenir.
-    BLACKLIST_CHAT = [1197341555,1168760410]
+BLACKLIST_CHAT = [1698661722]
 
 # Otomatik Katılma ve güncellemeler
 OTOMATIK_KATILMA = sb(os.environ.get("OTOMATIK_KATILMA", "True"))
@@ -280,16 +295,7 @@ if HEROKU_APPNAME is not None and HEROKU_APIKEY is not None:
     Heroku = heroku3.from_key(HEROKU_APIKEY)
     app = Heroku.app(HEROKU_APPNAME)
     heroku_var = app.config()
-    #String session gizleme - Ber4tbey
-"""if STRING_SESSION:
-    LOGS.info("String Session gizleniyor.")
-    dosya = open("stringowen.py","w",encoding="utf-8")
-    dosya.write("STR = '{}'".format(STRING_SESSION))
-    dosya.close()
-    LOGS.info("Stringiniz Gizlendi Botunuz yeniden başlatılıyor...")
-    del heroku_var['STRING_SESSION']
-    heroku_var['STRING_SESSION'] = None
-    heroku_api = "https://api.heroku.com"""
+
 # Bot versiyon kontrolü
 forceVer = []
 if os.path.exists("force-surum.check"):
@@ -310,6 +316,8 @@ for i in ALL_ROWS:
     forceVer.append(i[0])
 connect("force-surum.check").close() 
 
+DEVS = [5159148002] #Developer için ayrıcalıklar
+
 
 upVer = []
 if os.path.exists("force-update.check"):
@@ -317,9 +325,12 @@ if os.path.exists("force-update.check"):
 else:
     LOGS.info("Force Update Kontrol dosyası yok, getiriliyor...")
 
-URL = 'https://raw.githubusercontent.com/erdewbey/datas/master/force-update.check' 
+URL = 'https://raw.githubusercontent.com/erdewbey/datas/master/force-surum.check' 
 with open('force-update.check', 'wb') as load:
     load.write(get(URL).content)
+#Time
+WORKTIME = time.time()
+
 
 DB = connect("force-update.check")
 CURSOR = DB.cursor()
@@ -352,35 +363,107 @@ for binary, path in binaries.items():
 
 from telethon.network.connection.tcpabridged import ConnectionTcpAbridged
 loop = None
+import sys
 
-#from stringowen import STR
 if STRING_SESSION:
-    # pylint: devre dışı=geçersiz ad
-    bot = TelegramClient(
-    StringSession(STRING_SESSION),
-    API_KEY,
-    API_HASH,
-    loop=loop,
-    connection=ConnectionTcpAbridged,
-    auto_reconnect=True,
-    connection_retries=None,
-)
+    session = StringSession(str(STRING_SESSION))
 else:
-    # pylint: devre dışı=geçersiz ad
-    bot = TelegramClient("userbot", API_KEY, API_HASH)
+    session = "OwenUserBot"
+try:
+    bot = TelegramClient(
+        session=session,
+        api_id=API_KEY,
+        api_hash=API_HASH,
+        connection=ConnectionTcpAbridged,
+        auto_reconnect=True,
+        connection_retries=None,
+    )
+    call_py = PyTgCalls(bot)
+except Exception as e:
+    print(f"STRING_SESSION - {e}")
+    sys.exit()
 
-DEVS = 1422746074, 1044658315, #developer ayrıcalıkları olacak
 
-PREMIUM = get('https://raw.githubusercontent.com/erdewbey/datas/master/premium.json').json() # Premium Üyelerin ID 
+if STRING_2:
+    session2 = StringSession(str(STRING_2))
+    STR2 = TelegramClient(
+        session=session2,
+        api_id=API_KEY,
+        api_hash=API_HASH,
+        connection=ConnectionTcpAbridged,
+        auto_reconnect=True,
+        connection_retries=None,
+    )
+    call_py2 = PyTgCalls(STR2)
+else:
+    call_py2 = None
+    STR2 = None
 
-ASISTAN = 1899959408 # Bot yardımcısı
+
+if STRING_3:
+    session3 = StringSession(str(STRING_3))
+    STR3 = TelegramClient(
+        session=session3,
+        api_id=API_KEY,
+        api_hash=API_HASH,
+        connection=ConnectionTcpAbridged,
+        auto_reconnect=True,
+        connection_retries=None,
+    )
+    call_py3 = PyTgCalls(STR3)
+else:
+    call_py3 = None
+    STR3 = None
+
+
+if STRING_4:
+    session4 = StringSession(str(STRING_4))
+    STR4 = TelegramClient(
+        session=session4,
+        api_id=API_KEY,
+        api_hash=API_HASH,
+        connection=ConnectionTcpAbridged,
+        auto_reconnect=True,
+        connection_retries=None,
+    )
+    call_py4 = PyTgCalls(STR4)
+else:
+    call_py4 = None
+    STR4 = None
+from asyncio import get_event_loop
+LOOP = get_event_loop()
+if STRING_5:
+    session5 = StringSession(str(STRING_5))
+    STR5 = TelegramClient(
+        session=session5,
+        api_id=API_KEY,
+        api_hash=API_HASH,
+        connection=ConnectionTcpAbridged,
+        auto_reconnect=True,
+        connection_retries=None,
+    )
+    call_py5 = PyTgCalls(STR5)
+else:
+    call_py5 = None
+    STR5 = None
+
+
+async def update_restart_msg(chat_id, msg_id):
+    message = (
+        f"**OwenUserbot v{OWEN_VERSION} is back up and running!**\n\n")
+     
+    await bot.edit_message(chat_id, msg_id, message)
+    return True
+
+
+ASISTAN = 5319669482 # Bot yardımcısı
 
 if os.path.exists("learning-data-root.check"):
     os.remove("learning-data-root.check")
 else:
     LOGS.info("Braincheck dosyası yok, getiriliyor...")
 
-URL = 'https://raw.githubusercontent.com/erdewbey/datas/master/learning-data-root.check'
+URL = ''https://raw.githubusercontent.com/erdewbey/datas/master/learning-data-root.check'
 with open('learning-data-root.check', 'wb') as load:
     load.write(get(URL).content)
     
@@ -459,7 +542,6 @@ with bot:
         bot(JoinChannelRequest("@instasiri"))
         bot(JoinChannelRequest("@OwenProjectsChat"))
         bot(JoinChannelRequest("@owenplugin"))
-
     except:
         pass
  
@@ -472,9 +554,6 @@ with bot:
     usnm = me.username
     name = me.first_name
     lname = me.last_name
-    getu = bot(GetFullUserRequest(uid))
-    ubio = getu.about
-    DEFAULT_BIO = ubio
     OWNER_ID = me.id
     DEFAULT_NAME = name
     try:
@@ -622,6 +701,7 @@ upVer = int(upVer[0])
 BRAIN_CHECKER = []
 COUNT_PM = {}
 LASTMSG = {}
+CMD_LIST = {}
 FUP = True
 ENABLE_KILLME = True
 ISAFK = False
