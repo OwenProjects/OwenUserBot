@@ -19,7 +19,7 @@ from telethon.tl.functions.account import UpdateProfileRequest
 from telethon.tl.functions.users import GetFullUserRequest
 from telethon.errors.rpcerrorlist import FloodWaitError
 
-from userbot import CMD_HELP, BOTLOG, BOTLOG_CHATID, DEFAULT_BIO, BIO_PREFIX, lastfm, LASTFM_USERNAME, bot
+from userbot import CMD_HELP, BOTLOG, BOTLOG_CHATID, BIO_PREFIX, lastfm, LASTFM_USERNAME, bot
 from userbot.events import register
 from userbot.cmdhelp import CmdHelp
 
@@ -52,6 +52,8 @@ else:
 LASTFMCHECK = False
 RUNNING = False
 LastLog = False
+DEFAULT_BIO = ""
+
 # ================================================
 
 
