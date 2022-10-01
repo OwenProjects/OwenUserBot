@@ -13,7 +13,7 @@ from telethon.errors import AboutTooLongError
 from telethon.errors.rpcerrorlist import YouBlockedUserError
 from telethon.tl.functions.account import UpdateProfileRequest
 
-from userbot import (BIO_PREFIX, BOTLOG, BOTLOG_CHATID, CMD_HELP, DEFAULT_BIO,
+from userbot import (BIO_PREFIX, BOTLOG, BOTLOG_CHATID, CMD_HELP,
                      SPOTIFY_DC, SPOTIFY_KEY, bot)
 from userbot.events import register
 from userbot.cmdhelp import CmdHelp
@@ -45,6 +45,8 @@ SPOTIFYCHECK = False
 RUNNING = False
 OLDEXCEPT = False
 PARSE = False
+DEFAULT_BIO = ""
+
 
 
 # ================================================
