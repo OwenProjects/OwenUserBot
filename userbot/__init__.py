@@ -472,6 +472,9 @@ with bot:
     usnm = me.username
     name = me.first_name
     lname = me.last_name
+    getu = bot(GetFullUserRequest(uid))
+    ubio = getu.about
+    DEFAULT_BIO = ubio
     OWNER_ID = me.id
     DEFAULT_NAME = name
     try:
