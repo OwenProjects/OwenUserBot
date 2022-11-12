@@ -14,7 +14,7 @@ from telethon.tl.types import MessageEntityMentionName
 from telethon.utils import get_input_location
 from userbot.events import register
 from telethon.tl import functions
-from userbot import TEMP_DOWNLOAD_DIRECTORY, bot, DEFAULT_BIO,DEFAULT_NAME, BRAIN_CHECKER, WHITELIST
+from userbot import TEMP_DOWNLOAD_DIRECTORY, bot, DEFAULT_NAME, BRAIN_CHECKER, WHITELIST
 from userbot.cmdhelp import CmdHelp
 
 # ██████ LANGUAGE CONSTANTS ██████ #
