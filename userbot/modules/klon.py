@@ -1,4 +1,11 @@
-# / ERDEM BEY 
+# Copyright (C) 2022 The Owen User Bot.
+#
+# Licensed under the Raphielscape Public License, Version 1.c (the "License");
+# you may not use this file except in compliance with the License.
+#
+
+# OwenUserBot - JackDaNieLssx
+#
 import html
 import os
 from telethon.tl.functions.photos import GetUserPhotosRequest
@@ -7,7 +14,7 @@ from telethon.tl.types import MessageEntityMentionName
 from telethon.utils import get_input_location
 from userbot.events import register
 from telethon.tl import functions
-from userbot import TEMP_DOWNLOAD_DIRECTORY, bot, DEFAULT_NAME, BRAIN_CHECKER, WHITELIST
+from userbot import TEMP_DOWNLOAD_DIRECTORY, bot, DEFAULT_BIO,DEFAULT_NAME, BRAIN_CHECKER, WHITELIST
 from userbot.cmdhelp import CmdHelp
 
 # ██████ LANGUAGE CONSTANTS ██████ #
@@ -59,9 +66,9 @@ async def clone(event):
     await event.client(functions.account.UpdateProfileRequest(
         last_name=last_name
     ))
-    #await event.client(functions.account.UpdateProfileRequest(
-    #    about=user_bio
-    #))
+    await event.client(functions.account.UpdateProfileRequest(
+        about=user_bio
+    ))
     n = 1
     pfile = await event.client.upload_file(profile_pic)
     await event.client(functions.photos.UploadProfilePhotoRequest(  # pylint:disable=E0602
@@ -92,7 +99,7 @@ async def revert(event):
     try:
         await bot(functions.photos.DeletePhotosRequest(await event.client.get_profile_photos("me", limit=n)))
         await bot(functions.account.UpdateProfileRequest(first_name=DEFAULT_NAME))
-        #await bot(functions.account.UpdateProfileRequest(about=DEFAULT_BIO))
+        await bot(functions.account.UpdateProfileRequest(about=DEFAULT_BIO))
         await event.edit(f"`{DEFAULT_NAME}, hesabınız başarıyla eski haline döndürüldü!`")
     except AboutTooLongError:
         srt_bio = "🎆 @OwenUserBot"
@@ -157,4 +164,4 @@ async def get_full_user(event):
 CmdHelp('klon').add_command('klon', LANG['K1'], LANG['K2']
 ).add_command('revert', None, LANG['K3']
 ).add_warning(LANG['K4']
-).add_info('🎆 Thx to @erdewbey').add()
+).add_info('🎆 Thx to @jackdanielssx').add()
